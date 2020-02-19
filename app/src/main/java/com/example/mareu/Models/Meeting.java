@@ -4,14 +4,15 @@ import java.util.List;
 
 public class Meeting
 {
-    String name,description;
+    String name,description,room;
     List<String> emails;
     int day,month,year,startHour,endHour,startMinutes,endMinutes;
-    MeetingRoom room;
 
-    public Meeting(String name, String emails, String description, int day, int month, int year, int startHour, int endHour, int startMinutes, int endMinutes, MeetingRoom room) {
+    public Meeting(String name, String description, String room, List<String> emails, int day, int month, int year, int startHour, int endHour, int startMinutes, int endMinutes) {
         this.name = name;
         this.description = description;
+        this.room = room;
+        this.emails = emails;
         this.day = day;
         this.month = month;
         this.year = year;
@@ -19,9 +20,7 @@ public class Meeting
         this.endHour = endHour;
         this.startMinutes = startMinutes;
         this.endMinutes = endMinutes;
-        this.room = room;
     }
-
 
     public String getName() {
         return name;
@@ -63,14 +62,6 @@ public class Meeting
         this.year = year;
     }
 
-    public MeetingRoom getRoom() {
-        return room;
-    }
-
-    public void setRoom(MeetingRoom room) {
-        this.room = room;
-    }
-
     public int getStartHour() {
         return startHour;
     }
@@ -109,5 +100,17 @@ public class Meeting
 
     public void setEmails(String emails) {
         this.emails.add(emails);
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
+    public void setEmails(List<String> emails) {
+        this.emails = emails;
     }
 }

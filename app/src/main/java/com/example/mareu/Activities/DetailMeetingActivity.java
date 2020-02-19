@@ -10,19 +10,26 @@ import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mareu.Fragments.DatePickerFragment;
 import com.example.mareu.Fragments.EndTimePickerFragment;
 import com.example.mareu.Fragments.StartTimePickerFragment;
+import com.example.mareu.Models.Meeting;
 import com.example.mareu.R;
 
-public class DetailMeetingActivity extends AppCompatActivity
+public class DetailMeetingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener
 {
     private EditText meetingName, newMeetingEmail,meetingDescription;
     private LinearLayout emailList;
+    private Spinner spinnerMeetingRoomList;
+    private Meeting currentMeeting;
 
 
     @Override
@@ -33,6 +40,17 @@ public class DetailMeetingActivity extends AppCompatActivity
         newMeetingEmail = findViewById(R.id.detail_meeting_add_email);
         meetingDescription = findViewById(R.id.detail_meeting_description);
         emailList = findViewById(R.id.detail_meeting_emails);
+        spinnerMeetingRoomList = findViewById(R.id.spinner_roomlist);
+
+        // Initialisation du spinner
+
+        initEmailsSpinner();
+
+        // Gestion des entrées dans l'editText de saisie du nom de la réunion
+
+        initMeetingName();
+
+        // Gestion des entrées dans l'editText de saisie des emails des participants
 
         newMeetingEmail.addTextChangedListener(new TextWatcher()
         {
@@ -54,7 +72,7 @@ public class DetailMeetingActivity extends AppCompatActivity
 
                         @Override
                         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                            if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (i == EditorInfo.IME_ACTION_DONE)){
+                            if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT)){
                                 TextView addedEmail = new TextView(getApplicationContext());
                                 addedEmail.setTextColor(getResources().getColor(R.color.colorAccent));
                                 addedEmail.setText(editable.toString());
@@ -68,6 +86,43 @@ public class DetailMeetingActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    private void initMeetingName() {
+        meetingName.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(isValidMeetingName(editable.toString())) {
+                    meetingName.setText(editable);
+                    currentMeeting.setName(editable.toString());
+                }
+            }
+        });
+    }
+
+    private void initEmailsSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                                                                             R.array.meetingrooms, R.layout.support_simple_spinner_dropdown_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinnerMeetingRoomList.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     public void showDatePickerDialog(View v) {
@@ -94,5 +149,25 @@ public class DetailMeetingActivity extends AppCompatActivity
         else
             return false;
 
+    }
+
+    private boolean isValidMeetingName(String roomNameToTest){
+
+        // A implémenter : test d'unicité du nom
+
+        if (!roomNameToTest.isEmpty())
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        currentMeeting.setRoom(adapterView.getItemAtPosition(i).toString());
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        Toast.makeText(this,R.string.spinner_meeting_room_nothing_selected,Toast.LENGTH_LONG);
     }
 }

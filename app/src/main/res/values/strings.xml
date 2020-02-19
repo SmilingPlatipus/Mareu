@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">Mareu</string>
     <string name="action_settings">Settings</string>
+    <string-array name="meetingrooms">MeetingRooms
+        <item name="meetingroom1">MeetingRoom1</item>
+        <item name="meetingroom2">MeetingRoom2</item>
+        <item name="meetingroom3">MeetingRoom3</item>
+        <item name="meetingroom4">MeetingRoom4</item>
+        <item name="meetingroom5">MeetingRoom5</item>
+        <item name="meetingroom6">MeetingRoom6</item>
+        <item name="meetingroom7">MeetingRoom7</item>
+        <item name="meetingroom8">MeetingRoom8</item>
+        <item name="meetingroom9">MeetingRoom9</item>
+        <item name="meetingroom10">MeetingRoom10</item>
+    </string-array>
+    <string name="spinner_meeting_room_nothing_selected">Veuillez sélectionner une salle de réunion</string>
 </resources>
