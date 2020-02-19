@@ -1,14 +1,16 @@
 package com.example.mareu.Models;
 
+import java.util.List;
+
 public class Meeting
 {
-    String name,emails,description;
+    String name,description;
+    List<String> emails;
     int day,month,year,startHour,endHour,startMinutes,endMinutes;
     MeetingRoom room;
 
     public Meeting(String name, String emails, String description, int day, int month, int year, int startHour, int endHour, int startMinutes, int endMinutes, MeetingRoom room) {
         this.name = name;
-        this.emails = emails;
         this.description = description;
         this.day = day;
         this.month = month;
@@ -23,10 +25,6 @@ public class Meeting
 
     public String getName() {
         return name;
-    }
-
-    public String getEmails() {
-        return emails;
     }
 
     public String getDescription() {
@@ -47,10 +45,6 @@ public class Meeting
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setEmails(String emails) {
-        this.emails = emails;
     }
 
     public void setDescription(String description) {
@@ -107,5 +101,13 @@ public class Meeting
 
     public void setEndMinutes(int endMinutes) {
         this.endMinutes = endMinutes;
+    }
+
+    public List<String> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(String emails) {
+        this.emails.add(emails);
     }
 }

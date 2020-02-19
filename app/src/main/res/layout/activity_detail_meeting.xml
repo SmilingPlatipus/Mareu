@@ -146,39 +146,52 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/editText_Date"
+            <TextView
+                android:id="@+id/TextView_Date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:focusable="false"
+                android:gravity="center"
                 android:inputType="date" />
 
-            <EditText
-                android:id="@+id/editTextStartTime"
+            <TextView
+                android:id="@+id/TextViewStartTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:gravity="center"
                 android:inputType="time" />
 
-            <EditText
-                android:id="@+id/editTextEndTime"
+            <TextView
+                android:id="@+id/TextViewEndTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:gravity="center"
                 android:inputType="time" />
         </LinearLayout>
 
         <EditText
-            android:id="@+id/detail_meeting_emails"
+            android:id="@+id/detail_meeting_add_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Adresses email des participants"
+            android:hint="Ajouter un participant"
             android:inputType="textEmailAddress" />
+
+        <LinearLayout
+            android:id="@+id/detail_meeting_emails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3" />
+
+
 
         <EditText
             android:id="@+id/detail_meeting_description"
