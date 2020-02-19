@@ -2,6 +2,7 @@ package com.example.mareu.Fragments;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.TextView;
@@ -19,6 +20,13 @@ public class EndTimePickerFragment extends DialogFragment
 
     public Calendar c;
     public TextView editTextEndTime;
+    private EndTimePickerFragmentCallback fragmentCaller;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentCaller = (EndTimePickerFragmentCallback) context;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -36,5 +44,14 @@ public class EndTimePickerFragment extends DialogFragment
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         c.set(c.get(Calendar.YEAR),c.get(Calendar.MONTH),c.get(Calendar.DATE),hourOfDay,minute);
         editTextEndTime.setText(hourOfDay+":"+minute);
+        onEndTimeSelected(hourOfDay,minute);
+    }
+
+    public interface EndTimePickerFragmentCallback{
+        public void onEndTimeSelected(int hour,int minute);
+    }
+
+    public void onEndTimeSelected(int hour, int minute){
+        fragmentCaller.onEndTimeSelected(hour,minute);
     }
 }

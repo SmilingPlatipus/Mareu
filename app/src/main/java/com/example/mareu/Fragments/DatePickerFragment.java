@@ -2,6 +2,8 @@ package com.example.mareu.Fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -19,12 +21,19 @@ public class DatePickerFragment extends DialogFragment
 {
     public Calendar c;
     public TextView date;
+    private DatePickerFragmentCallBack fragmentCaller;
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         c.set(i,i1,i2);
-        // POURQUOI le mois commence à 0 ??????????????????????????????????????????????????????????????
         date.setText(i2+"/"+(i1+1)+"/"+i);
+        onDateSelected(i2,i1+1,i);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentCaller = (DatePickerFragmentCallBack) context;
     }
 
     @NonNull
@@ -38,5 +47,13 @@ public class DatePickerFragment extends DialogFragment
 
         // Create a new instance of DatePickerDialog and return it
         return new DatePickerDialog(getActivity(), this, year, month, day);
+    }
+
+    public interface DatePickerFragmentCallBack{
+        public void onDateSelected(int day,int month,int year);
+}
+
+    public void onDateSelected(int day,int month,int year){
+        fragmentCaller.onDateSelected(day,month,year);
     }
 }

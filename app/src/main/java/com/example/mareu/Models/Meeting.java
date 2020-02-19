@@ -8,6 +8,7 @@ public class Meeting
     List<String> emails;
     int day,month,year,startHour,endHour,startMinutes,endMinutes;
 
+
     public Meeting(String name, String description, String room, List<String> emails, int day, int month, int year, int startHour, int endHour, int startMinutes, int endMinutes) {
         this.name = name;
         this.description = description;

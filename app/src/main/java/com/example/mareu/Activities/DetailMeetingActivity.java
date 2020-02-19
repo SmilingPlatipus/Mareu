@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.example.mareu.Fragments.DatePickerFragment;
@@ -24,12 +26,19 @@ import com.example.mareu.Fragments.StartTimePickerFragment;
 import com.example.mareu.Models.Meeting;
 import com.example.mareu.R;
 
-public class DetailMeetingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener
+import java.util.ArrayList;
+import java.util.List;
+
+public class DetailMeetingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatePickerFragment.DatePickerFragmentCallBack,
+                                                                        StartTimePickerFragment.StartTimePickerFragmentCallback, EndTimePickerFragment.EndTimePickerFragmentCallback
 {
     private EditText meetingName, newMeetingEmail,meetingDescription;
     private LinearLayout emailList;
     private Spinner spinnerMeetingRoomList;
     private Meeting currentMeeting;
+    String name,description,room;
+    List<String> emails = new ArrayList<>();
+    int day,month,year,startHour,endHour,startMinutes,endMinutes;
 
 
     @Override
@@ -67,16 +76,17 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
             @Override
             public void afterTextChanged(final Editable editable) {
                 if (isValidEmailAddress(editable.toString()))
-                    newMeetingEmail.setOnEditorActionListener(new EditText.OnEditorActionListener()
+                    newMeetingEmail.setOnEditorActionListener(new OnEditorActionListener()
                     {
 
                         @Override
                         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                             if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT)){
-                                TextView addedEmail = new TextView(getApplicationContext());
-                                addedEmail.setTextColor(getResources().getColor(R.color.colorAccent));
+                                Button addedEmail = findViewById(R.id.email_custom_button);
                                 addedEmail.setText(editable.toString());
                                 emailList.addView(addedEmail);
+                                emails.add(editable.toString());
+                                newMeetingEmail.getText().clear();
                                 return true;
                             }
                             else
@@ -86,6 +96,41 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
             }
         });
 
+        // Gestion des entrées dans l'editText description
+
+        initDescription();
+
+    }
+
+    private void initDescription() {
+        meetingDescription.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                meetingDescription.setOnEditorActionListener(new OnEditorActionListener()
+                {
+                    @Override
+                    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                        if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT)){
+                            description = meetingDescription.toString();
+                            return true;
+                        }
+                        else
+                            return false;
+                    }
+                });
+            }
+        });
     }
 
     private void initMeetingName() {
@@ -102,10 +147,21 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(final Editable editable) {
                 if(isValidMeetingName(editable.toString())) {
-                    meetingName.setText(editable);
-                    currentMeeting.setName(editable.toString());
+                    meetingName.setOnEditorActionListener(new OnEditorActionListener()
+                    {
+                        @Override
+                        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                            if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT)) {
+                                meetingName.setText(editable.toString());
+                                name = editable.toString();
+                                return true;
+                            }
+                            else
+                                return false;
+                        }
+                    });
                 }
             }
         });
@@ -161,13 +217,34 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
             return false;
     }
 
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        currentMeeting.setRoom(adapterView.getItemAtPosition(i).toString());
+        room = adapterView.getItemAtPosition(i).toString();
+        Toast.makeText(this,room+" sélectionnée",Toast.LENGTH_LONG);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         Toast.makeText(this,R.string.spinner_meeting_room_nothing_selected,Toast.LENGTH_LONG);
+    }
+
+    @Override
+    public void onDateSelected(int day, int month, int year) {
+        this.day = day;
+        this.month = month;
+        this.year = year;
+    }
+
+    @Override
+    public void onStartTimeSelected(int hour, int minute) {
+        this.startHour = hour;
+        this.startMinutes = minute;
+    }
+
+    @Override
+    public void onEndTimeSelected(int hour, int minute) {
+        this.endHour = hour;
+        this.endMinutes = minute;
     }
 }
