@@ -2,12 +2,13 @@ package com.example.mareu.Services;
 
 import com.example.mareu.Models.Meeting;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class MeetingApiServiceImplementation implements MeetingApiService
 {
-    List<Meeting> Meetings;
+    List<Meeting> Meetings = new ArrayList<>();
 
     @Override
     public List<Meeting> getMeetings() {

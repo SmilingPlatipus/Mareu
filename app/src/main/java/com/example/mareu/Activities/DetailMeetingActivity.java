@@ -22,11 +22,13 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.example.mareu.DI.DI;
 import com.example.mareu.Fragments.DatePickerFragment;
 import com.example.mareu.Fragments.EndTimePickerFragment;
 import com.example.mareu.Fragments.StartTimePickerFragment;
 import com.example.mareu.Models.Meeting;
 import com.example.mareu.R;
+import com.example.mareu.Services.MeetingApiService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
     String name,description,room;
     List<String> emails = new ArrayList<>();
     int day,month,year,startHour,endHour,startMinutes,endMinutes;
+    public static MeetingApiService mMeetingService;
 
 
     @Override
@@ -55,6 +58,9 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         spinnerMeetingRoomList = findViewById(R.id.spinner_roomlist);
         ok = findViewById(R.id.button_ok);
         cancel = findViewById(R.id.button_cancel);
+        mMeetingService = DI.getMeetingApiService();
+        mMeetingService.getMeetings();
+        day = month = year = startHour = endHour = 0;
 
         // Initialisation du spinner
 
@@ -66,49 +72,42 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
 
         // Gestion des entrées dans l'editText de saisie des emails des participants
 
-        newMeetingEmail.addTextChangedListener(new TextWatcher()
+        newMeetingEmail.setOnEditorActionListener(new OnEditorActionListener()
         {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT) ){
+                    if (isValidEmailAddress(textView.getText().toString())) {
+                        Button emailButton = new Button(getApplicationContext());
+                        TableLayout.LayoutParams p = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        p.weight = 1;
+                        emailButton.setLayoutParams(p);
+                        emailButton.setText(textView.getText().toString());
+                        emailButton.setTextColor(Color.BLACK);
+                        Drawable closeButton = getDrawable(android.R.drawable.ic_menu_close_clear_cancel);
+                        closeButton.setBounds(0, 0, 50, 50);
+                        closeButton.setTint(Color.BLACK);
+                        emailButton.setCompoundDrawablesRelative(null, null, closeButton, null);
+                        emailButton.setBackground(getDrawable(R.drawable.email_button_shape));
+                        emails.add(textView.getText().toString());
+                        emailList.addView(emailButton);
+                        newMeetingEmail.getText().clear();
+                    }
+                    else
+                        Toast.makeText(getApplicationContext(),"Adresse email invalide",Toast.LENGTH_LONG).show();
+                    return true;
+                }
 
-            }
-
-            @Override
-            public void afterTextChanged(final Editable editable) {
-                if (isValidEmailAddress(editable.toString()))
-                    newMeetingEmail.setOnEditorActionListener(new OnEditorActionListener()
-                    {
-
-                        @Override
-                        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                            if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT) && isValidEmailAddress(editable.toString())){
-                                Button emailButton = new Button(getApplicationContext());
-                                TableLayout.LayoutParams p = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                                p.weight = 1;
-                                emailButton.setLayoutParams(p);
-                                emailButton.setText(editable.toString());
-                                emailButton.setTextColor(Color.BLACK);
-                                Drawable closeButton = getDrawable(android.R.drawable.ic_menu_close_clear_cancel);
-                                closeButton.setBounds(0,0,50,50);
-                                closeButton.setTint(Color.BLACK);
-                                emailButton.setCompoundDrawablesRelative(null,null,closeButton,null);
-                                emailButton.setBackground(getDrawable(R.drawable.email_button_shape));
-                                emails.add(editable.toString());
-                                emailList.addView(emailButton);
-                                newMeetingEmail.getText().clear();
-                                return true;
-                            }
-                            else
-                                return false;
-                        }
-                    });
+                else
+                    return false;
             }
         });
+
+
+
+
+
 
         // Gestion des entrées dans l'editText description (Je n'arrive pas à faire apparaître de bouton send ou done)
 
@@ -125,6 +124,20 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         {
             @Override
             public void onClick(View view) {
+                currentMeeting = new Meeting(meetingName.getText().toString(),meetingDescription.toString(),room,emails,day,month,year,startHour,endHour,startMinutes,endMinutes);
+                if (meetingName.getText().toString().isEmpty()){
+                    Toast.makeText(getApplicationContext(),"Veuillez entrer un nom de réunion",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (emails.isEmpty()){
+                    Toast.makeText(getApplicationContext(),"Veuillez au moins entrer un participant",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if((day == 0) || (month == 0) || (year == 0) || (startHour == 0) || (endHour == 0)) {
+                    Toast.makeText(getApplicationContext(), "Veuillez renseigner la date, l'heure de début et de fin", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
 
             }
         });
@@ -257,7 +270,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         room = adapterView.getItemAtPosition(i).toString();
-        Toast.makeText(this,room+" sélectionnée",Toast.LENGTH_LONG);
+        Toast.makeText(this,room+" sélectionnée",Toast.LENGTH_LONG).show();
     }
 
     @Override
