@@ -2,8 +2,6 @@ package com.example.mareu.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,7 +9,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -19,9 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -39,8 +35,9 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                                                                         StartTimePickerFragment.StartTimePickerFragmentCallback, EndTimePickerFragment.EndTimePickerFragmentCallback
 {
     private EditText meetingName, newMeetingEmail,meetingDescription;
-    private LinearLayout emailList;
+    private TableLayout emailList;
     private Spinner spinnerMeetingRoomList;
+    private Button ok,cancel;
     private Meeting currentMeeting;
     String name,description,room;
     List<String> emails = new ArrayList<>();
@@ -56,6 +53,8 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         meetingDescription = findViewById(R.id.detail_meeting_description);
         emailList = findViewById(R.id.detail_meeting_emails);
         spinnerMeetingRoomList = findViewById(R.id.spinner_roomlist);
+        ok = findViewById(R.id.button_ok);
+        cancel = findViewById(R.id.button_cancel);
 
         // Initialisation du spinner
 
@@ -87,9 +86,11 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
 
                         @Override
                         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                            if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT)){
+                            if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT) && isValidEmailAddress(editable.toString())){
                                 Button emailButton = new Button(getApplicationContext());
-                                emailButton.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+                                TableLayout.LayoutParams p = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                p.weight = 1;
+                                emailButton.setLayoutParams(p);
                                 emailButton.setText(editable.toString());
                                 emailButton.setTextColor(Color.BLACK);
                                 Drawable closeButton = getDrawable(android.R.drawable.ic_menu_close_clear_cancel);
@@ -109,10 +110,32 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
             }
         });
 
-        // Gestion des entrées dans l'editText description
+        // Gestion des entrées dans l'editText description (Je n'arrive pas à faire apparaître de bouton send ou done)
 
         initDescription();
 
+        // Gestion de la validation des données à l'aide des boutons ok et cancel
+
+        initValidationButtons();
+
+    }
+
+    private void initValidationButtons() {
+        ok.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void initDescription() {

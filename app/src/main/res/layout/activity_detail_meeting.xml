@@ -20,9 +20,10 @@
             android:layout_margin="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:drawableStart="@android:drawable/ic_input_get"
             android:ems="10"
             android:hint="Nom de la réunion"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName" />
 
 
     <Spinner
@@ -115,27 +116,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableStart="@android:drawable/ic_dialog_email"
             android:ems="10"
             android:hint="Ajouter un participant"
             android:inputType="textEmailAddress" />
 
-        <LinearLayout
+        <TableLayout
             android:id="@+id/detail_meeting_emails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3" />
-
+            android:orientation="horizontal"/>
 
 
         <EditText
             android:id="@+id/detail_meeting_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableStart="@android:drawable/ic_dialog_info"
             android:ems="10"
             android:gravity="start|top"
             android:hint="Description de la réunion"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:imeOptions="actionDone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/ok" />
+
+            <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/cancel" />
+        </LinearLayout>
 
     </LinearLayout>
     </ScrollView>
