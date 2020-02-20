@@ -2,13 +2,17 @@ package com.example.mareu.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -31,6 +35,7 @@ import com.example.mareu.R;
 import com.example.mareu.Services.MeetingApiService;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DetailMeetingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatePickerFragment.DatePickerFragmentCallBack,
@@ -75,11 +80,15 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         newMeetingEmail.setOnEditorActionListener(new OnEditorActionListener()
         {
 
+            @SuppressLint("ClickableViewAccessibility")
             @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            public boolean onEditorAction(final TextView textView, int i, KeyEvent keyEvent) {
                 if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT) ){
-                    if (isValidEmailAddress(textView.getText().toString())) {
-                        Button emailButton = new Button(getApplicationContext());
+                    if (isValidEmailAddress(textView.getText().toString()) && !emails.contains(textView.getText().toString())) {
+
+                        // Transformation d'une saisie valide en bouton utilisateur, supprimable
+
+                        final Button emailButton = new Button(getApplicationContext());
                         TableLayout.LayoutParams p = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         p.weight = 1;
                         emailButton.setLayoutParams(p);
@@ -93,9 +102,37 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                         emails.add(textView.getText().toString());
                         emailList.addView(emailButton);
                         newMeetingEmail.getText().clear();
+
+                        // Gestion des événements sur la croix de chaque bouton créé
+
+                        emailButton.setOnTouchListener(new View.OnTouchListener()
+                        {
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                final int DRAWABLE_LEFT = 0;
+                                final int DRAWABLE_TOP = 1;
+                                final int DRAWABLE_RIGHT = 2;
+                                final int DRAWABLE_BOTTOM = 3;
+
+                                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                                    if(motionEvent.getRawX() >= (emailButton.getRight() - emailButton.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                                        Toast.makeText(getApplicationContext(),emailButton.getText()+" supprimé de la réunion",Toast.LENGTH_LONG).show();
+                                        emails.remove(textView.getText().toString());
+                                        emailList.removeView(emailButton);
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                            });
                     }
-                    else
-                        Toast.makeText(getApplicationContext(),"Adresse email invalide",Toast.LENGTH_LONG).show();
+                    else{
+                        if (emails.contains(textView.getText().toString()))
+                            Toast.makeText(getApplicationContext(),"Participant déjà inscrit à cette réunion",Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getApplicationContext(),"Adresse email invalide",Toast.LENGTH_LONG).show();
+                    }
+
                     return true;
                 }
 
@@ -104,11 +141,6 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
             }
         });
 
-
-
-
-
-
         // Gestion des entrées dans l'editText description (Je n'arrive pas à faire apparaître de bouton send ou done)
 
         initDescription();
@@ -116,7 +148,6 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         // Gestion de la validation des données à l'aide des boutons ok et cancel
 
         initValidationButtons();
-
     }
 
     private void initValidationButtons() {
@@ -125,6 +156,9 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
             @Override
             public void onClick(View view) {
                 currentMeeting = new Meeting(meetingName.getText().toString(),meetingDescription.toString(),room,emails,day,month,year,startHour,endHour,startMinutes,endMinutes);
+
+                // Derniers tests pour s'assurer que tout a été rempli et que les valeurs soient correctes
+
                 if (meetingName.getText().toString().isEmpty()){
                     Toast.makeText(getApplicationContext(),"Veuillez entrer un nom de réunion",Toast.LENGTH_LONG).show();
                     return;
@@ -137,7 +171,26 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                     Toast.makeText(getApplicationContext(), "Veuillez renseigner la date, l'heure de début et de fin", Toast.LENGTH_LONG).show();
                     return;
                 }
+                if (startHour > endHour || (startHour == endHour && startMinutes > endMinutes)) {
+                    Toast.makeText(getApplicationContext(), "L'heure de début doit précéder l'heure de fin", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (year <= Calendar.YEAR)
+                    if (month <= Calendar.MONTH)
+                        if (day < Calendar.DAY_OF_MONTH){
+                            Toast.makeText(getApplicationContext(), "Veuillez saisir une date correcte", Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
+
+                // Ajout de la réunion à la liste, si elle remplit les conditions
+                if (mMeetingService.canBeOrganized(currentMeeting)) {
+                    mMeetingService.addMeeting(currentMeeting);
+                    Toast.makeText(getApplicationContext(), "Réunion enregistrée", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+                else
+                    Toast.makeText(getApplicationContext(), "La réunion entre en conflit avec une précédente", Toast.LENGTH_LONG).show();
 
             }
         });
@@ -223,6 +276,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinnerMeetingRoomList.setAdapter(adapter);
+        spinnerMeetingRoomList.setOnItemSelectedListener( this);
     }
 
     @Override
@@ -258,8 +312,6 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
 
     private boolean isValidMeetingName(String roomNameToTest){
 
-        // A implémenter : test d'unicité du nom
-
         if (!roomNameToTest.isEmpty())
             return true;
         else
@@ -270,7 +322,6 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         room = adapterView.getItemAtPosition(i).toString();
-        Toast.makeText(this,room+" sélectionnée",Toast.LENGTH_LONG).show();
     }
 
     @Override
