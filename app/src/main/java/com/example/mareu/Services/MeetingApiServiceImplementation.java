@@ -25,6 +25,8 @@ public class MeetingApiServiceImplementation implements MeetingApiService
         // Temps prévu de début et fin, en minutes
         int sMeeting = userEntry.getStartHour() + userEntry.getStartMinutes();
         int eMeeting = userEntry.getEndHour() + userEntry.getEndMinutes();
+        if (Meetings.isEmpty())
+            return true;
 
         do{
             currentMeeting = (Meeting) meetingIterator.next();
