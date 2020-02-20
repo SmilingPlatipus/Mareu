@@ -3,18 +3,24 @@ package com.example.mareu.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -82,10 +88,17 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                         @Override
                         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                             if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT)){
-                                Button addedEmail = findViewById(R.id.email_custom_button);
-                                addedEmail.setText(editable.toString());
-                                emailList.addView(addedEmail);
+                                Button emailButton = new Button(getApplicationContext());
+                                emailButton.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+                                emailButton.setText(editable.toString());
+                                emailButton.setTextColor(Color.BLACK);
+                                Drawable closeButton = getDrawable(android.R.drawable.ic_menu_close_clear_cancel);
+                                closeButton.setBounds(0,0,50,50);
+                                closeButton.setTint(Color.BLACK);
+                                emailButton.setCompoundDrawablesRelative(null,null,closeButton,null);
+                                emailButton.setBackground(getDrawable(R.drawable.email_button_shape));
                                 emails.add(editable.toString());
+                                emailList.addView(emailButton);
                                 newMeetingEmail.getText().clear();
                                 return true;
                             }
