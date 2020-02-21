@@ -15,13 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mareu.Models.Meeting;
 import com.example.mareu.R;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MeetingAdapter extends RecyclerView.Adapter<MeetingViewHolder>
+import static com.example.mareu.Activities.MainActivity.mMeetingService;
+
+public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHolder>
 {
-    private List<Meeting> meetings = new ArrayList<>();
+    private List<Meeting> meetings;
     private Context mContext;
 
     public MeetingAdapter(List<Meeting> meetings, Context mContext) {
@@ -31,64 +32,70 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingViewHolder>
 
     @NonNull
     @Override
-    public MeetingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_meeting,
                                                                      parent, false);
-        return new MeetingViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MeetingViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         String meetingInformations,meetingEmails;
         meetingEmails = new String();
         Meeting item;
         Iterator currentMeeting = meetings.iterator();
 
+        do {
+            item = (Meeting) currentMeeting.next();
+            meetingInformations = item.getName() + "  " + item.getStartHour()+item.getStartMinutes()+ "  " + item.getEndHour()+item.getEndMinutes()+"  " + item.getRoom();
+            holder.meetingSummary.setText(meetingInformations);
+
+            Iterator currentEmail = item.getEmails().iterator();
             do {
-                item = (Meeting) currentMeeting.next();
-                meetingInformations = item.getName() + "  " + item.getStartHour()+item.getStartMinutes()+ "  " + item.getEndHour()+item.getEndMinutes()+"  " + item.getRoom();
-                holder.meetingSummary.setText(meetingInformations);
+                meetingEmails += currentEmail.next();
+                if (currentEmail.hasNext())
+                    meetingEmails += ", ";
+            }while (currentEmail.hasNext());
+            holder.meetingPeoples.setText(meetingEmails);
 
-                Iterator currentEmail = item.getEmails().iterator();
-                do {
-                    meetingEmails += currentEmail.next();
-                    if (currentEmail.hasNext())
-                        meetingEmails += ", ";
-                }while (currentEmail.hasNext());
-                holder.meetingPeoples.setText(meetingEmails);
+        }while (currentMeeting.hasNext());
 
-            }while (currentMeeting.hasNext());
+        // Gestion clics sur bouton supprimer
 
-            // Gestion clics sur bouton supprimer
-
-            holder.deleteButton.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(mContext, "Gérer la suppression", Toast.LENGTH_LONG).show();
-                }
-            });
-
+        holder.deleteButton.setOnClickListener(new View.OnClickListener()
+        {
+            String meetingToDelete = mMeetingService.getMeetingName(position);
+            @Override
+            public void onClick(View view) {
+                mMeetingService.removeMeeting(meetingToDelete);
+                Toast.makeText(mContext, "Réunion " + meetingToDelete + " supprimée", Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return meetings.size();
     }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder
+    {
+        TextView meetingSummary, meetingPeoples;
+        ImageButton deleteButton;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            meetingSummary = itemView.findViewById(R.id.meeting_summary);
+            meetingPeoples = itemView.findViewById(R.id.meeting_peoples);
+            deleteButton = itemView.findViewById(R.id.meeting_delete_button);
+        }
+
+
+
+
 }
 
-class MeetingViewHolder extends RecyclerView.ViewHolder
-{
-    TextView meetingSummary, meetingPeoples;
-    ImageButton deleteButton;
 
-    public MeetingViewHolder(@NonNull View itemView) {
-        super(itemView);
-
-        meetingSummary = itemView.findViewById(R.id.meeting_summary);
-        meetingPeoples = itemView.findViewById(R.id.meeting_peoples);
-        deleteButton = itemView.findViewById(R.id.meeting_delete_button);
-    }
 }

@@ -73,13 +73,25 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
 
         // Gestion des entrées dans l'editText de saisie des emails des participants
 
+        initEmails();
+
+        // Gestion des entrées dans l'editText description (Je n'arrive pas à faire apparaître de bouton send ou done)
+
+        initDescription();
+
+        // Gestion de la validation des données à l'aide des boutons ok et cancel
+
+        initValidationButtons();
+    }
+
+    private void initEmails() {
         newMeetingEmail.setOnEditorActionListener(new OnEditorActionListener()
         {
 
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onEditorAction(final TextView textView, int i, KeyEvent keyEvent) {
-                if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT) ){
+                if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT || i == EditorInfo.IME_ACTION_SEND || i == EditorInfo.IME_ACTION_GO) ){
                     if (isValidEmailAddress(textView.getText().toString()) && !emails.contains(textView.getText().toString())) {
 
                         // Transformation d'une saisie valide en bouton utilisateur, supprimable
@@ -120,7 +132,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                                 }
                                 return false;
                             }
-                            });
+                        });
                     }
                     else{
                         if (emails.contains(textView.getText().toString()))
@@ -136,14 +148,6 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                     return false;
             }
         });
-
-        // Gestion des entrées dans l'editText description (Je n'arrive pas à faire apparaître de bouton send ou done)
-
-        initDescription();
-
-        // Gestion de la validation des données à l'aide des boutons ok et cancel
-
-        initValidationButtons();
     }
 
     private void initValidationButtons() {

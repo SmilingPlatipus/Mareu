@@ -31,11 +31,6 @@ public class MainActivity extends AppCompatActivity
         mMeetingService.getMeetings();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        MeetingFragment mMeetingFragment = new MeetingFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.main_activity_layout, mMeetingFragment);
-        fragmentTransaction.commit();
 
         FloatingActionButton fab = findViewById(R.id.buttonAddMeeting);
         fab.setOnClickListener(new View.OnClickListener()
@@ -46,6 +41,17 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        MeetingFragment mMeetingFragment = new MeetingFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.main_activity_layout, mMeetingFragment);
+        fragmentTransaction.commit();
     }
 
     @Override

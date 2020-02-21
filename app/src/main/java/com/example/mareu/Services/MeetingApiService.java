@@ -13,4 +13,6 @@ public interface MeetingApiService
     void addMeeting(Meeting userEntry);
 
     void removeMeeting(String name);
+
+    String getMeetingName(int ID);
 }

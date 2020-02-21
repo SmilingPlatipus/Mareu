@@ -11,8 +11,7 @@ public class Meeting
 
     public Meeting(String name, String description, String room, List<String> emails, int day, int month, int year, int startHour, int endHour, int startMinutes, int endMinutes) {
         this.name = name;
-        this.description = description;
-        this.room = room;
+        this.description = description;        this.room = room;
         this.emails = emails;
         this.day = day;
         this.month = month;

@@ -36,22 +36,23 @@ public class MeetingFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         meetings = mMeetingService.getMeetings();
+        View recyclerView,emptyView;
 
         if (!meetings.isEmpty()) {
-            View view = inflater.inflate(R.layout.list_meeting, container, false);
+            recyclerView = inflater.inflate(R.layout.list_meeting, container, false);
 
-            Context context = view.getContext();
-            mRecyclerView = (RecyclerView) view;
+            Context context = recyclerView.getContext();
+            mRecyclerView = (RecyclerView) recyclerView;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
-            mMeetingAdapter = new MeetingAdapter(meetings, this.getContext());
+            mMeetingAdapter = new MeetingAdapter(meetings,context);
             mRecyclerView.setAdapter(mMeetingAdapter);
 
-            return view;
+            return recyclerView;
         }
         else{
-            View emptyView = inflater.inflate(R.layout.empty_recyclerview,container,false);
+            emptyView = inflater.inflate(R.layout.empty_recyclerview,container,false);
             return emptyView;
         }
 

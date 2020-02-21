@@ -8,16 +8,16 @@ import java.util.List;
 
 public class MeetingApiServiceImplementation implements MeetingApiService
 {
-    List<Meeting> Meetings = new ArrayList<>();
+    List<Meeting> meetings = new ArrayList<>();
 
     @Override
     public List<Meeting> getMeetings() {
-        return Meetings;
+        return meetings;
     }
 
     @Override
     public boolean canBeOrganized(Meeting userEntry) {
-        Iterator meetingIterator = Meetings.iterator();
+        Iterator meetingIterator = meetings.iterator();
         Meeting currentMeeting;
 
         // On vérifie les conditions pour qu'une nouvelle réunion puisse être créée
@@ -25,7 +25,7 @@ public class MeetingApiServiceImplementation implements MeetingApiService
         // Temps prévu de début et fin, en minutes
         int sMeeting = userEntry.getStartHour() + userEntry.getStartMinutes();
         int eMeeting = userEntry.getEndHour() + userEntry.getEndMinutes();
-        if (Meetings.isEmpty())
+        if (meetings.isEmpty())
             return true;
 
         do{
@@ -55,17 +55,22 @@ public class MeetingApiServiceImplementation implements MeetingApiService
     @Override
     public void addMeeting(Meeting userEntry) {
         if (canBeOrganized(userEntry))
-            Meetings.add(userEntry);
+            meetings.add(userEntry);
     }
 
     @Override
     public void removeMeeting(String name) {
-        Iterator meetingIterator = Meetings.iterator();
+        Iterator meetingIterator = meetings.iterator();
         Meeting currentMeeting;
         do{
             currentMeeting = (Meeting) meetingIterator.next();
             if(currentMeeting.getName() == name)
-                Meetings.remove(currentMeeting);
+                meetings.remove(currentMeeting);
         }while(meetingIterator.hasNext());
+    }
+
+    @Override
+    public String getMeetingName(int ID) {
+        return meetings.get(ID).getName();
     }
 }
