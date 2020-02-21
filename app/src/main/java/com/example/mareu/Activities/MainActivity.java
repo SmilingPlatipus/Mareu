@@ -3,11 +3,17 @@ package com.example.mareu.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.mareu.DI.DI;
+import com.example.mareu.Fragments.MeetingFragment;
 import com.example.mareu.R;
+import com.example.mareu.Services.MeetingApiService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.View;
 import android.view.Menu;
@@ -16,12 +22,20 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
 {
 
+    public static MeetingApiService mMeetingService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mMeetingService = DI.getMeetingApiService();
+        mMeetingService.getMeetings();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        MeetingFragment mMeetingFragment = new MeetingFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.main_activity_layout, mMeetingFragment);
+        fragmentTransaction.commit();
 
         FloatingActionButton fab = findViewById(R.id.buttonAddMeeting);
         fab.setOnClickListener(new View.OnClickListener()

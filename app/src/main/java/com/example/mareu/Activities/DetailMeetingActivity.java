@@ -6,7 +6,6 @@ import androidx.fragment.app.DialogFragment;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,17 +25,17 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.example.mareu.DI.DI;
 import com.example.mareu.Fragments.DatePickerFragment;
 import com.example.mareu.Fragments.EndTimePickerFragment;
 import com.example.mareu.Fragments.StartTimePickerFragment;
 import com.example.mareu.Models.Meeting;
 import com.example.mareu.R;
-import com.example.mareu.Services.MeetingApiService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static com.example.mareu.Activities.MainActivity.mMeetingService;
 
 public class DetailMeetingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatePickerFragment.DatePickerFragmentCallBack,
                                                                         StartTimePickerFragment.StartTimePickerFragmentCallback, EndTimePickerFragment.EndTimePickerFragmentCallback
@@ -49,7 +48,6 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
     String name,description,room;
     List<String> emails = new ArrayList<>();
     int day,month,year,startHour,endHour,startMinutes,endMinutes;
-    public static MeetingApiService mMeetingService;
 
 
     @Override
@@ -63,8 +61,6 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         spinnerMeetingRoomList = findViewById(R.id.spinner_roomlist);
         ok = findViewById(R.id.button_ok);
         cancel = findViewById(R.id.button_cancel);
-        mMeetingService = DI.getMeetingApiService();
-        mMeetingService.getMeetings();
         day = month = year = startHour = endHour = 0;
 
         // Initialisation du spinner
@@ -258,6 +254,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                             if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT)) {
                                 meetingName.setText(editable.toString());
                                 name = editable.toString();
+                                meetingName.clearFocus();
                                 return true;
                             }
                             else
