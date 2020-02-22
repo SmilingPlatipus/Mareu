@@ -12,11 +12,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mareu.Events.DeleteMeetingEvent;
 import com.example.mareu.Models.Meeting;
 import com.example.mareu.R;
 
 import java.util.Iterator;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 import static com.example.mareu.Activities.MainActivity.mMeetingService;
 
@@ -67,7 +70,7 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
             String meetingToDelete = mMeetingService.getMeetingName(position);
             @Override
             public void onClick(View view) {
-                mMeetingService.removeMeeting(meetingToDelete);
+                EventBus.getDefault().post(new DeleteMeetingEvent(mMeetingService.getMeeting(meetingToDelete)));
                 Toast.makeText(mContext, "Réunion " + meetingToDelete + " supprimée", Toast.LENGTH_LONG).show();
             }
         });

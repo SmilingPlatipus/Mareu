@@ -15,4 +15,6 @@ public interface MeetingApiService
     void removeMeeting(String name);
 
     String getMeetingName(int ID);
+
+    Meeting getMeeting(String Name);
 }

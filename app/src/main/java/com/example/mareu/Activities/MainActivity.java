@@ -2,25 +2,28 @@ package com.example.mareu.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.mareu.DI.DI;
+import com.example.mareu.Events.DeleteMeetingEvent;
 import com.example.mareu.Fragments.MeetingFragment;
 import com.example.mareu.R;
 import com.example.mareu.Services.MeetingApiService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity
 {
+    FragmentManager fragmentManager;
+    MeetingFragment mMeetingFragment;
 
     public static MeetingApiService mMeetingService;
     @Override
@@ -31,6 +34,12 @@ public class MainActivity extends AppCompatActivity
         mMeetingService.getMeetings();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mMeetingFragment = MeetingFragment.newInstance();
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.main_activity_layout, mMeetingFragment);
+        fragmentTransaction.commit();
 
         FloatingActionButton fab = findViewById(R.id.buttonAddMeeting);
         fab.setOnClickListener(new View.OnClickListener()
@@ -44,14 +53,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-
-        MeetingFragment mMeetingFragment = new MeetingFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.main_activity_layout, mMeetingFragment);
-        fragmentTransaction.commit();
+        fragmentManager.beginTransaction().replace(R.id.main_activity_layout,MeetingFragment.newInstance()).commit();
     }
 
     @Override
@@ -76,5 +92,9 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void onEvent(DeleteMeetingEvent event){
+        fragmentManager.beginTransaction().replace(R.id.main_activity_layout,MeetingFragment.newInstance()).commit();
+
+    }
 
 }

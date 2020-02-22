@@ -73,4 +73,21 @@ public class MeetingApiServiceImplementation implements MeetingApiService
     public String getMeetingName(int ID) {
         return meetings.get(ID).getName();
     }
+
+    @Override
+    public Meeting getMeeting(String Name) {
+        Iterator meetingIterator = meetings.iterator();
+        Meeting currentMeeting;
+
+        if(!meetings.isEmpty()){
+            do{
+                currentMeeting = (Meeting) meetingIterator.next();
+                if (currentMeeting.getName() == Name)
+                    return currentMeeting;
+            }while(meetingIterator.hasNext());
+        }
+
+        return null;
+
+    }
 }
