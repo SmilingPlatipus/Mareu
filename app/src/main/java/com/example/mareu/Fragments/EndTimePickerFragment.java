@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
 import com.example.mareu.R;
 
 import java.util.Calendar;
+
+import static com.example.mareu.Activities.MainActivity.today;
 
 
 public class EndTimePickerFragment extends DialogFragment
@@ -42,9 +45,13 @@ public class EndTimePickerFragment extends DialogFragment
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        c.set(c.get(Calendar.YEAR),c.get(Calendar.MONTH),c.get(Calendar.DATE),hourOfDay,minute);
-        editTextEndTime.setText(hourOfDay+":"+minute);
-        onEndTimeSelected(hourOfDay,minute);
+        if (hourOfDay*60+minute <= (today.get(Calendar.HOUR_OF_DAY)*60 + today.get(Calendar.MINUTE)))
+            Toast.makeText(this.getContext(), "Veuillez entrer une heure de fin valide", Toast.LENGTH_LONG).show();
+        else {
+            c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), hourOfDay, minute);
+            editTextEndTime.setText(hourOfDay + ":" + minute);
+            onEndTimeSelected(hourOfDay, minute);
+        }
     }
 
     public interface EndTimePickerFragmentCallback{

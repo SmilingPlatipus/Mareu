@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,8 @@ import androidx.fragment.app.DialogFragment;
 import com.example.mareu.R;
 
 import java.util.Calendar;
+
+import static com.example.mareu.Activities.MainActivity.today;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener
@@ -25,9 +28,13 @@ public class DatePickerFragment extends DialogFragment
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        c.set(i,i1,i2);
-        date.setText(i2+"/"+(i1+1)+"/"+i);
-        onDateSelected(i2,i1+1,i);
+        if (i2 < today.get(Calendar.DAY_OF_MONTH) && i1 <= today.get(Calendar.MONTH) && i <= today.get(Calendar.YEAR))
+            Toast.makeText(this.getContext(), "Veuillez entrer une date valide", Toast.LENGTH_LONG).show();
+        else {
+            c.set(i, i1, i2);
+            date.setText(i2 + "/" + (i1 + 1) + "/" + i);
+            onDateSelected(i2, i1 + 1, i);
+        }
     }
 
     @Override

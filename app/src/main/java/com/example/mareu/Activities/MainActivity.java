@@ -18,6 +18,8 @@ import com.example.mareu.R;
 import com.example.mareu.Services.MeetingApiService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Calendar;
+
 import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity
@@ -25,7 +27,9 @@ public class MainActivity extends AppCompatActivity
     FragmentManager fragmentManager;
     MeetingFragment mMeetingFragment;
 
+
     public static MeetingApiService mMeetingService;
+    public static final Calendar today = Calendar.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

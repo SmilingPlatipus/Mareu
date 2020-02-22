@@ -36,6 +36,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static com.example.mareu.Activities.MainActivity.mMeetingService;
+import static com.example.mareu.Activities.MainActivity.today;
 
 public class DetailMeetingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatePickerFragment.DatePickerFragmentCallBack,
                                                                         StartTimePickerFragment.StartTimePickerFragmentCallback, EndTimePickerFragment.EndTimePickerFragmentCallback
@@ -175,9 +176,9 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                     Toast.makeText(getApplicationContext(), "L'heure de début doit précéder l'heure de fin", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if (year <= Calendar.YEAR)
-                    if (month <= Calendar.MONTH)
-                        if (day < Calendar.DAY_OF_MONTH){
+                if (year <= today.YEAR)
+                    if (month <= today.MONTH)
+                        if (day < today.DAY_OF_MONTH){
                             Toast.makeText(getApplicationContext(), "Veuillez saisir une date correcte", Toast.LENGTH_LONG).show();
                             return;
                         }
@@ -332,9 +333,9 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
 
     @Override
     public void onDateSelected(int day, int month, int year) {
-        this.day = day;
-        this.month = month;
-        this.year = year;
+            this.day = day;
+            this.month = month;
+            this.year = year;
     }
 
     @Override

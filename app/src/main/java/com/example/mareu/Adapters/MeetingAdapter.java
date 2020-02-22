@@ -50,7 +50,7 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
 
         do {
             item = (Meeting) currentMeeting.next();
-            meetingInformations = item.getName() + "  " + item.getStartHour()+item.getStartMinutes()+ "  " + item.getEndHour()+item.getEndMinutes()+"  " + item.getRoom();
+            meetingInformations = item.getName() + "  " + item.getStartHour()+"h"+item.getStartMinutes()+ "  " + item.getEndHour()+"h"+item.getEndMinutes()+"  " + item.getRoom();
             holder.meetingSummary.setText(meetingInformations);
 
             Iterator currentEmail = item.getEmails().iterator();
