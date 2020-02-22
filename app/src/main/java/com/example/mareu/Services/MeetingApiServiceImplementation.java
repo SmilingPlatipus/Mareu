@@ -22,9 +22,9 @@ public class MeetingApiServiceImplementation implements MeetingApiService
 
         // On vérifie les conditions pour qu'une nouvelle réunion puisse être créée
 
-        // Temps prévu de début et fin, en minutes
-        int sMeeting = userEntry.getStartHour() + userEntry.getStartMinutes();
-        int eMeeting = userEntry.getEndHour() + userEntry.getEndMinutes();
+        // Temps prévu de début et fin, convertis en minutes
+        int sMeeting = userEntry.getStartHour()*60 + userEntry.getStartMinutes();
+        int eMeeting = userEntry.getEndHour()*60 + userEntry.getEndMinutes();
         if (meetings.isEmpty())
             return true;
 
@@ -40,8 +40,8 @@ public class MeetingApiServiceImplementation implements MeetingApiService
             {
                 if (currentMeeting.getDay() == userEntry.getDay() && currentMeeting.getMonth() == userEntry.getMonth() && currentMeeting.getYear() == userEntry.getYear())
                 {
-                    int pStart = currentMeeting.getStartHour()+currentMeeting.getStartMinutes();
-                    int pEnd = currentMeeting.getEndHour()+currentMeeting.getEndMinutes();
+                    int pStart = currentMeeting.getStartHour()*60+currentMeeting.getStartMinutes();
+                    int pEnd = currentMeeting.getEndHour()*60+currentMeeting.getEndMinutes();
 
                     if ((sMeeting <= pStart && eMeeting >= pStart) || (sMeeting <= pEnd && eMeeting >= pEnd) || (sMeeting <= pStart && eMeeting >= pEnd))
                         return false;

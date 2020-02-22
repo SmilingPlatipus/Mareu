@@ -14,11 +14,14 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.mareu.DI.DI;
 import com.example.mareu.Events.DeleteMeetingEvent;
 import com.example.mareu.Fragments.MeetingFragment;
+import com.example.mareu.Models.Meeting;
 import com.example.mareu.R;
 import com.example.mareu.Services.MeetingApiService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 import de.greenrobot.event.EventBus;
 
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity
 
     public static MeetingApiService mMeetingService;
     public static final Calendar today = Calendar.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +94,29 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.date_filter) {
+
+            // Tri des réunions en fonction de la date
+
+            Collections.sort(mMeetingService.getMeetings(), new Comparator<Meeting>()
+            {
+                @Override
+                public int compare(Meeting meeting, Meeting t1) {
+                    if (meeting.getYear() <= t1.getYear() && meeting.getMonth() <= t1.getMonth() && meeting.getDay() < t1.getDay())
+                        return -1;
+                    if (meeting.getYear() == t1.getYear() && meeting.getMonth() == t1.getMonth() && meeting.getDay() == t1.getDay()) {
+                        if (meeting.getStartHour() * 60 + meeting.getStartMinutes() < t1.getStartHour() * 60 + t1.getStartMinutes())
+                            return -1;
+                        else
+                            return 1;
+                    }
+                    else
+                        return 1;
+                }
+            });
+
+            // Remplacement du fragment par un nouveau, avec la liste triée
+
+            fragmentManager.beginTransaction().replace(R.id.main_activity_layout,MeetingFragment.newInstance()).commit();
             return true;
         }
 

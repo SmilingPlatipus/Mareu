@@ -32,11 +32,11 @@ import com.example.mareu.Models.Meeting;
 import com.example.mareu.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static com.example.mareu.Activities.MainActivity.mMeetingService;
 import static com.example.mareu.Activities.MainActivity.today;
+import static com.example.mareu.Fragments.DatePickerFragment.c;
 
 public class DetailMeetingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatePickerFragment.DatePickerFragmentCallBack,
                                                                         StartTimePickerFragment.StartTimePickerFragmentCallback, EndTimePickerFragment.EndTimePickerFragmentCallback
@@ -224,7 +224,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                 {
                     @Override
                     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                        if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT)){
+                        if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT || i == EditorInfo.IME_ACTION_NONE)){
                             description = meetingDescription.toString();
                             return true;
                         }
@@ -292,13 +292,21 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
     }
 
     public void showStartTimePickerDialog(View v) {
-        DialogFragment newFragment = new StartTimePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "StartTimePicker");
+        if(c != null) {
+            DialogFragment newFragment = new StartTimePickerFragment();
+            newFragment.show(getSupportFragmentManager(), "StartTimePicker");
+        }
+        else
+            Toast.makeText(this, "Veuillez d'abord saisir une date", Toast.LENGTH_LONG).show();
     }
 
     public void showEndTimePickerDialog(View v) {
-        DialogFragment newFragment = new EndTimePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "EndTimePicker");
+        if (c != null) {
+            DialogFragment newFragment = new EndTimePickerFragment();
+            newFragment.show(getSupportFragmentManager(), "EndTimePicker");
+        }
+        else
+            Toast.makeText(this, "Veuillez d'abord saisir une date", Toast.LENGTH_LONG).show();
     }
 
     private boolean isValidEmailAddress(String emailToTest){
@@ -319,7 +327,6 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         else
             return false;
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

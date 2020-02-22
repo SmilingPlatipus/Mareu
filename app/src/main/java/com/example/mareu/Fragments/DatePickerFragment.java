@@ -22,7 +22,7 @@ import static com.example.mareu.Activities.MainActivity.today;
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener
 {
-    public Calendar c;
+    public static Calendar c = null;
     public TextView date;
     private DatePickerFragmentCallBack fragmentCaller;
 

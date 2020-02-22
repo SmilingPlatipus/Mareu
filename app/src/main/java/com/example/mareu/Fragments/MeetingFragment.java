@@ -31,7 +31,6 @@ public class MeetingFragment extends Fragment
     List<Meeting> meetings = new ArrayList<>();
     MeetingAdapter mMeetingAdapter;
     RecyclerView mRecyclerView;
-    private DeleteMeetingEvent event;
 
     public static MeetingFragment newInstance() {
         MeetingFragment fragment = new MeetingFragment();
