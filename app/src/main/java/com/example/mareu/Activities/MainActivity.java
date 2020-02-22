@@ -19,9 +19,14 @@ import com.example.mareu.R;
 import com.example.mareu.Services.MeetingApiService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 
 import de.greenrobot.event.EventBus;
 
@@ -121,6 +126,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.room_filter) {
+
+            // Tri des réunions en fonction de la salle
+
+            Collections.sort(mMeetingService.getMeetings(), new MeetingRoomComparator());
+
+            // Remplacement du fragment par un nouveau, avec la liste triée
+
+            fragmentManager.beginTransaction().replace(R.id.main_activity_layout,MeetingFragment.newInstance()).commit();
             return true;
         }
 
@@ -131,5 +144,13 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.main_activity_layout,MeetingFragment.newInstance()).commit();
 
     }
+
+    public class MeetingRoomComparator implements Comparator<Meeting> {
+        @Override
+        public int compare(Meeting meeting, Meeting t1) {
+            return meeting.getRoom().compareTo(t1.getRoom());
+        }
+    }
+
 
 }
