@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Mareu</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_date">Filtrer par date</string>
+    <string name="action_room">Filtrer par salle</string>
     <string-array name="meetingrooms">MeetingRooms
         <item name="meetingroom1">MeetingRoom1</item>
         <item name="meetingroom2">MeetingRoom2</item>

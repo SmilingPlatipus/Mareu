@@ -45,23 +45,18 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         String meetingInformations,meetingEmails;
         meetingEmails = new String();
-        Meeting item;
-        Iterator currentMeeting = meetings.iterator();
+        Meeting item = meetings.get(position);
 
+        meetingInformations = item.getName() + "  " + item.getStartHour()+"h"+item.getStartMinutes()+ "  " + item.getEndHour()+"h"+item.getEndMinutes()+"  " + item.getRoom();
+        holder.meetingSummary.setText(meetingInformations);
+        Iterator currentEmail = item.getEmails().iterator();
         do {
-            item = (Meeting) currentMeeting.next();
-            meetingInformations = item.getName() + "  " + item.getStartHour()+"h"+item.getStartMinutes()+ "  " + item.getEndHour()+"h"+item.getEndMinutes()+"  " + item.getRoom();
-            holder.meetingSummary.setText(meetingInformations);
+            meetingEmails += currentEmail.next();
+            if (currentEmail.hasNext())
+                meetingEmails += ", ";
+        }while (currentEmail.hasNext());
+        holder.meetingPeoples.setText(meetingEmails);
 
-            Iterator currentEmail = item.getEmails().iterator();
-            do {
-                meetingEmails += currentEmail.next();
-                if (currentEmail.hasNext())
-                    meetingEmails += ", ";
-            }while (currentEmail.hasNext());
-            holder.meetingPeoples.setText(meetingEmails);
-
-        }while (currentMeeting.hasNext());
 
         // Gestion clics sur bouton supprimer
 
