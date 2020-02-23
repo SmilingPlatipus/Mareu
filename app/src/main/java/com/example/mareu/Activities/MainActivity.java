@@ -102,7 +102,9 @@ public class MainActivity extends AppCompatActivity
             {
                 @Override
                 public int compare(Meeting meeting, Meeting t1) {
-                    if (meeting.getYear() <= t1.getYear() && meeting.getMonth() <= t1.getMonth() && meeting.getDay() < t1.getDay())
+                    if (meeting.getYear() < t1.getYear() || ((meeting.getYear() == t1.getYear())&&meeting.getMonth() < t1.getMonth() ))
+                        return -1;
+                    if (meeting.getYear() == t1.getYear() && meeting.getMonth() == t1.getMonth() && meeting.getDay() < t1.getDay())
                         return -1;
                     if (meeting.getYear() == t1.getYear() && meeting.getMonth() == t1.getMonth() && meeting.getDay() == t1.getDay()) {
                         if (meeting.getStartHour() * 60 + meeting.getStartMinutes() < t1.getStartHour() * 60 + t1.getStartMinutes())
