@@ -43,7 +43,7 @@ public class MeetingApiServiceImplementation implements MeetingApiService
                     int pStart = currentMeeting.getStartHour()*60+currentMeeting.getStartMinutes();
                     int pEnd = currentMeeting.getEndHour()*60+currentMeeting.getEndMinutes();
 
-                    if ((sMeeting <= pStart && eMeeting >= pStart) || (sMeeting <= pEnd && eMeeting >= pEnd) || (sMeeting <= pStart && eMeeting >= pEnd))
+                    if ((sMeeting <= pStart && eMeeting >= pStart) || (sMeeting <= pEnd && eMeeting >= pEnd) || (sMeeting <= pStart && eMeeting >= pEnd) || (sMeeting >= pStart && eMeeting <= pEnd))
                         return false;
                 }
             }
