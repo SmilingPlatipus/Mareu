@@ -19,13 +19,9 @@ import com.example.mareu.R;
 import com.example.mareu.Services.MeetingApiService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 
 import de.greenrobot.event.EventBus;

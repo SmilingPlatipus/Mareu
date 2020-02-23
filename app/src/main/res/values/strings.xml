@@ -3,16 +3,16 @@
     <string name="action_date">Filtrer par date</string>
     <string name="action_room">Filtrer par salle</string>
     <string-array name="meetingrooms">MeetingRooms
-        <item name="meetingroom1">MeetingRoom1</item>
-        <item name="meetingroom2">MeetingRoom2</item>
-        <item name="meetingroom3">MeetingRoom3</item>
-        <item name="meetingroom4">MeetingRoom4</item>
-        <item name="meetingroom5">MeetingRoom5</item>
-        <item name="meetingroom6">MeetingRoom6</item>
-        <item name="meetingroom7">MeetingRoom7</item>
-        <item name="meetingroom8">MeetingRoom8</item>
-        <item name="meetingroom9">MeetingRoom9</item>
-        <item name="meetingroom10">MeetingRoom10</item>
+        <item name="meetingroomA">MeetingRoomA</item>
+        <item name="meetingroomB">MeetingRoomB</item>
+        <item name="meetingroomC">MeetingRoomC</item>
+        <item name="meetingroomD">MeetingRoomD</item>
+        <item name="meetingroomE">MeetingRoomE</item>
+        <item name="meetingroomF">MeetingRoomF</item>
+        <item name="meetingroomG">MeetingRoomG</item>
+        <item name="meetingroomH">MeetingRoomH</item>
+        <item name="meetingroomI">MeetingRoomI</item>
+        <item name="meetingroomJ">MeetingRoomJ</item>
     </string-array>
     <string name="spinner_meeting_room_nothing_selected">Veuillez sélectionner une salle de réunion</string>
 </resources>

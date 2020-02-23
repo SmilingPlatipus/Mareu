@@ -1,54 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_layout">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/meeting_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_margin="10dp"
         android:background="@drawable/meeting_round_image"
-        app:layout_constraintStart_toStartOf="@id/fragment_layout"
-        app:layout_constraintTop_toTopOf="@id/fragment_layout"
         app:layout_constraintBottom_toBottomOf="@id/fragment_layout"
-        app:layout_constraintRight_toLeftOf="@+id/textlayout"/>
+        app:layout_constraintRight_toLeftOf="@+id/textlayout"
+        app:layout_constraintStart_toStartOf="@id/fragment_layout"
+        app:layout_constraintTop_toTopOf="@id/fragment_layout" />
+
 
     <LinearLayout
+        android:id="@+id/textlayout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:orientation="vertical"
-        android:id="@+id/textlayout"
-        app:layout_constraintTop_toTopOf="@id/fragment_layout"
-        app:layout_constraintBottom_toBottomOf="@id/fragment_layout"
-        app:layout_constraintLeft_toRightOf="@id/meeting_image"
-        app:layout_constraintRight_toLeftOf="@id/meeting_delete_button">
+        app:layout_constrainedWidth="true"
+        app:layout_constraintStart_toEndOf="@id/barrier"
+        app:layout_constraintEnd_toStartOf="@id/barrier2">
 
         <TextView
             android:id="@+id/meeting_summary"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:ellipsize="end"
-            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit ="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
+            android:textAlignment="viewStart"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintHorizontal_bias="0.0"/>
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/fragment_layout"
+            app:layout_constraintLeft_toRightOf="@id/barrier"
+            app:layout_constraintRight_toLeftOf="@id/barrier2"
+            app:layout_constraintTop_toTopOf="@id/fragment_layout" />
 
         <TextView
             android:id="@+id/meeting_peoples"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:ellipsize="end"
-            android:maxLines="1"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintHorizontal_bias="0.0"/>
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit ="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
+            android:textAlignment="viewStart"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@id/meeting_summary"
+            app:layout_constraintLeft_toRightOf="@id/barrier"
+            app:layout_constraintRight_toLeftOf="@id/barrier2"
+            app:layout_constraintTop_toTopOf="@id/fragment_layout" />
 
     </LinearLayout>
 
@@ -62,6 +76,20 @@
         app:layout_constraintRight_toRightOf="@id/fragment_layout"
         app:layout_constraintTop_toTopOf="@id/fragment_layout"
         app:srcCompat="@drawable/ic_delete_white_24dp" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="right"
+        app:constraint_referenced_ids="meeting_image" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="left"
+        app:constraint_referenced_ids="meeting_delete_button"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

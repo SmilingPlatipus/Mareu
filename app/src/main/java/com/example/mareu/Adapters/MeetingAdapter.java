@@ -3,6 +3,7 @@ package com.example.mareu.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -77,6 +78,7 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
         return meetings.size();
     }
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
         TextView meetingSummary, meetingPeoples;
@@ -88,6 +90,8 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
             meetingSummary = itemView.findViewById(R.id.meeting_summary);
             meetingPeoples = itemView.findViewById(R.id.meeting_peoples);
             deleteButton = itemView.findViewById(R.id.meeting_delete_button);
+            meetingPeoples.setSelected(true);
+            meetingSummary.setSelected(true);
         }
 
 
