@@ -17,4 +17,7 @@ public interface MeetingApiService
     String getMeetingName(int ID);
 
     Meeting getMeeting(String Name);
+
+    // For testing purposes
+    void clearMeetings();
 }

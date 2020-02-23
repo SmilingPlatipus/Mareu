@@ -1,6 +1,7 @@
 package com.example.mareu.Models;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Meeting
 {
@@ -112,5 +113,28 @@ public class Meeting
 
     public void setEmails(List<String> emails) {
         this.emails = emails;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Meeting meeting = (Meeting) o;
+        return day == meeting.day &&
+                month == meeting.month &&
+                year == meeting.year &&
+                startHour == meeting.startHour &&
+                endHour == meeting.endHour &&
+                startMinutes == meeting.startMinutes &&
+                endMinutes == meeting.endMinutes &&
+                Objects.equals(name, meeting.name) &&
+                Objects.equals(description, meeting.description) &&
+                Objects.equals(room, meeting.room) &&
+                Objects.equals(emails, meeting.emails);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, room, emails, day, month, year, startHour, endHour, startMinutes, endMinutes);
     }
 }

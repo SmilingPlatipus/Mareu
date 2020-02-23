@@ -75,19 +75,24 @@ public class MeetingApiServiceImplementation implements MeetingApiService
     }
 
     @Override
-    public Meeting getMeeting(String Name) {
+    public Meeting getMeeting(String name) {
         Iterator meetingIterator = meetings.iterator();
         Meeting currentMeeting;
 
         if(!meetings.isEmpty()){
             do{
                 currentMeeting = (Meeting) meetingIterator.next();
-                if (currentMeeting.getName() == Name)
+                if (currentMeeting.getName().compareTo(name) == 0)
                     return currentMeeting;
             }while(meetingIterator.hasNext());
         }
 
         return null;
 
+    }
+
+    @Override
+    public void clearMeetings() {
+        meetings.clear();
     }
 }
