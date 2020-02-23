@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -71,6 +73,12 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMeetingService.clearMeetings();
     }
 
     @Override

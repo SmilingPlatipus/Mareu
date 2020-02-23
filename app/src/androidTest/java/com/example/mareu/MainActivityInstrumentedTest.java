@@ -2,7 +2,6 @@ package com.example.mareu;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
-import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.contrib.PickerActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
@@ -16,11 +15,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.espresso.Espresso.onData;
+
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
-import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -93,11 +92,17 @@ public class MainActivityInstrumentedTest
         onView(ViewMatchers.withId(R.id.meeting_delete_button)).perform(click());
         ViewMatchers.withId(R.layout.empty_recyclerview).matches(isDisplayed());
     }
-
+/*
     @Test
-    public void meetingsList_addMeetingsToRecyclerView_ThenTestFilters(){
+    public void meetingsList_addMeetingsToRecyclerView_ThenSortThem() {
+        InitApi.initMeetings();
+        openActionBarOverflowOrOptionsMenu(getInstrumentation().getContext());
+        onView(withText(R.string.action_date)).perform(click());
 
+        for(int i=0;i<6;i++)
+            onView(RecyclerViewMatcher.withRecyclerView(R.id.recyclerview)
+                .atPositionOnView(0, R.id.meeting_summary))
+                .check(matches(hasDescendant(withText(Integer.toString(InitApi.c.get((Calendar.DAY_OF_MONTH)+i))+"/"+InitApi.c.get(Calendar.MONTH)+"/"+InitApi.c.get(Calendar.YEAR)))));
     }
-
-
+*/
 }

@@ -1,5 +1,6 @@
 package com.example.mareu.Utils;
 
+import com.example.mareu.DI.DI;
 import com.example.mareu.Models.Meeting;
 import com.example.mareu.Services.MeetingApiService;
 
@@ -11,10 +12,13 @@ public class InitApi
 {
 
     public static MeetingApiService service;
-    private Calendar c;
+    public static Calendar c;
 
 
-    public void initMeetings(){
+    public static void initMeetings(){
+
+        service = DI.getMeetingApiService();
+        c = Calendar.getInstance();
         List<String> emails = new ArrayList<>();
         String lamzone = "@lamzone.fr";
         for(int i = 0;i < 6;i++)
@@ -22,8 +26,7 @@ public class InitApi
 
         char meetingRoomLetter = 'A';
         for(int i = 0;i < 6;i++,meetingRoomLetter++) {
-
-            Meeting testMeeting = new Meeting("MeetingTest"+i, "nothing", "meetingroom"+meetingRoomLetter, emails, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH), c.get(Calendar.YEAR), c.get(Calendar.HOUR_OF_DAY) + i, c.get(Calendar.MINUTE) + 15, c.get(Calendar.HOUR_OF_DAY) + i+1, c.get(Calendar.MINUTE) + 15);
+            Meeting testMeeting = new Meeting("MeetingTest"+i, "nothing", "meetingroom"+meetingRoomLetter, emails, c.get(Calendar.DAY_OF_MONTH)+i, c.get(Calendar.MONTH), c.get(Calendar.YEAR), c.get(Calendar.HOUR_OF_DAY) + i, c.get(Calendar.MINUTE) + 15, c.get(Calendar.HOUR_OF_DAY) + i+1, c.get(Calendar.MINUTE) + 15);
             service.addMeeting(testMeeting);
         }
     }
