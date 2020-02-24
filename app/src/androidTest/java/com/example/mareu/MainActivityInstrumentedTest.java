@@ -8,6 +8,9 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.example.mareu.Activities.MainActivity;
+import com.example.mareu.Utils.InitApi;
+import com.example.mareu.Utils.MeetingRecyclerViewFiller;
+import com.example.mareu.Utils.RecyclerViewMatcher;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -16,8 +19,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 
+import java.util.Calendar;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.swipeUp;
@@ -25,9 +30,11 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasChildCount;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.*;
 /**
@@ -95,14 +102,20 @@ public class MainActivityInstrumentedTest
 /*
     @Test
     public void meetingsList_addMeetingsToRecyclerView_ThenSortThem() {
-        InitApi.initMeetings();
+        char meetingRoomLetter = 'B';
+        for(int i=0;i<6;i++,meetingRoomLetter++)
+            MeetingRecyclerViewFiller.meetingsList_addMeeting("Meeting"+i,"MeetingRoom"+meetingRoomLetter,i);
+
+
         openActionBarOverflowOrOptionsMenu(getInstrumentation().getContext());
         onView(withText(R.string.action_date)).perform(click());
 
         for(int i=0;i<6;i++)
             onView(RecyclerViewMatcher.withRecyclerView(R.id.recyclerview)
-                .atPositionOnView(0, R.id.meeting_summary))
-                .check(matches(hasDescendant(withText(Integer.toString(InitApi.c.get((Calendar.DAY_OF_MONTH)+i))+"/"+InitApi.c.get(Calendar.MONTH)+"/"+InitApi.c.get(Calendar.YEAR)))));
+                .atPositionOnView(i, R.id.meeting_summary))
+                .check(matches(hasDescendant(withText(i+"/3/2020 12h0 12h30"))));
+
     }
+
 */
 }
