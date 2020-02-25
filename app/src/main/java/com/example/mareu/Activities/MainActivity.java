@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity
 {
     FragmentManager fragmentManager;
     MeetingFragment mMeetingFragment;
+    Toolbar toolbar;
 
 
     public static MeetingApiService mMeetingService;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mMeetingService = DI.getMeetingApiService();
         mMeetingService.getMeetings();
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mMeetingFragment = MeetingFragment.newInstance();
@@ -103,6 +104,9 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.date_filter) {
+            // Changement du sous titre indiquant à l'utilisateur le filtre sélectionné
+
+            toolbar.setSubtitle(R.string.action_date);
 
             // Tri des réunions en fonction de la date
 
@@ -132,6 +136,9 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.room_filter) {
+            // Changement du sous titre indiquant à l'utilisateur le filtre sélectionné
+
+            toolbar.setSubtitle(R.string.action_room);
 
             // Tri des réunions en fonction de la salle
 

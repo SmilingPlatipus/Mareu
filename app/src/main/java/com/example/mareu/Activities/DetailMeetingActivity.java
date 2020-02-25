@@ -34,8 +34,6 @@ import com.example.mareu.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.mareu.Activities.MainActivity.mMeetingService;
-import static com.example.mareu.Activities.MainActivity.today;
 import static com.example.mareu.Fragments.DatePickerFragment.c;
 
 public class DetailMeetingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatePickerFragment.DatePickerFragmentCallBack,
@@ -92,15 +90,12 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onEditorAction(final TextView textView, int i, KeyEvent keyEvent) {
-                if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT || i == EditorInfo.IME_ACTION_SEND || i == EditorInfo.IME_ACTION_GO) ){
+                if ((i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT || i == EditorInfo.IME_ACTION_SEND || i == EditorInfo.IME_ACTION_GO || keyEvent.getAction() == KeyEvent.ACTION_DOWN && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) ){
                     if (isValidEmailAddress(textView.getText().toString()) && !emails.contains(textView.getText().toString())) {
 
                         // Transformation d'une saisie valide en bouton utilisateur, supprimable
 
                         final Button emailButton = new Button(getApplicationContext());
-                        TableLayout.LayoutParams p = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        p.weight = 1;
-                        emailButton.setLayoutParams(p);
                         emailButton.setText(textView.getText().toString());
                         emailButton.setTextColor(Color.BLACK);
                         Drawable closeButton = getDrawable(android.R.drawable.ic_menu_close_clear_cancel);
@@ -114,26 +109,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
 
                         // Gestion des événements sur la croix de chaque bouton créé
 
-                        emailButton.setOnTouchListener(new View.OnTouchListener()
-                        {
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                final int DRAWABLE_LEFT = 0;
-                                final int DRAWABLE_TOP = 1;
-                                final int DRAWABLE_RIGHT = 2;
-                                final int DRAWABLE_BOTTOM = 3;
-
-                                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                                    if(motionEvent.getRawX() >= (emailButton.getRight() - emailButton.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                                        Toast.makeText(getApplicationContext(),emailButton.getText()+" supprimé de la réunion",Toast.LENGTH_LONG).show();
-                                        emails.remove(textView.getText().toString());
-                                        emailList.removeView(emailButton);
-                                        return true;
-                                    }
-                                }
-                                return false;
-                            }
-                        });
+                        setCustomButtonListener(textView,emailButton);
                     }
                     else{
                         if (emails.contains(textView.getText().toString()))
@@ -151,48 +127,34 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         });
     }
 
+    private void setCustomButtonListener(final TextView textView, final Button emailButton) {
+        emailButton.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                final int DRAWABLE_RIGHT = 2;
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if(motionEvent.getRawX() >= (emailButton.getRight() - emailButton.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        Toast.makeText(getApplicationContext(),emailButton.getText()+" supprimé de la réunion",Toast.LENGTH_LONG).show();
+                        emails.remove(textView.getText().toString());
+                        emailList.removeView(emailButton);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
     private void initValidationButtons() {
         ok.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view) {
                 currentMeeting = new Meeting(meetingName.getText().toString(),meetingDescription.toString(),room,emails,day,month,year,startHour,endHour,startMinutes,endMinutes);
-
-                // Derniers tests pour s'assurer que tout a été rempli et que les valeurs soient correctes
-
-                if (meetingName.getText().toString().isEmpty()){
-                    Toast.makeText(getApplicationContext(),"Veuillez entrer un nom de réunion",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if (emails.isEmpty()){
-                    Toast.makeText(getApplicationContext(),"Veuillez au moins entrer un participant",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if((day == 0) || (month == 0) || (year == 0) || (startHour == 0) || (endHour == 0)) {
-                    Toast.makeText(getApplicationContext(), "Veuillez renseigner la date, l'heure de début et de fin", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if (startHour > endHour || (startHour == endHour && startMinutes > endMinutes)) {
-                    Toast.makeText(getApplicationContext(), "L'heure de début doit précéder l'heure de fin", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                if (year <= today.YEAR)
-                    if (month <= today.MONTH)
-                        if (day < today.DAY_OF_MONTH){
-                            Toast.makeText(getApplicationContext(), "Veuillez saisir une date correcte", Toast.LENGTH_LONG).show();
-                            return;
-                        }
-
-
-                // Ajout de la réunion à la liste, si elle remplit les conditions
-                if (mMeetingService.canBeOrganized(currentMeeting)) {
-                    mMeetingService.addMeeting(currentMeeting);
-                    Toast.makeText(getApplicationContext(), "Réunion enregistrée", Toast.LENGTH_LONG).show();
+                if(Meeting.isAValidMeeting(getApplicationContext(),currentMeeting))
                     finish();
-                }
-                else
-                    Toast.makeText(getApplicationContext(), "La réunion entre en conflit avec une précédente", Toast.LENGTH_LONG).show();
-
             }
         });
 

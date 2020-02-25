@@ -1,7 +1,14 @@
 package com.example.mareu.Models;
 
+import android.content.Context;
+import android.widget.Toast;
+
+
 import java.util.List;
 import java.util.Objects;
+
+import static com.example.mareu.Activities.MainActivity.mMeetingService;
+import static com.example.mareu.Activities.MainActivity.today;
 
 public class Meeting
 {
@@ -12,7 +19,8 @@ public class Meeting
 
     public Meeting(String name, String description, String room, List<String> emails, int day, int month, int year, int startHour, int endHour, int startMinutes, int endMinutes) {
         this.name = name;
-        this.description = description;        this.room = room;
+        this.description = description;
+        this.room = room;
         this.emails = emails;
         this.day = day;
         this.month = month;
@@ -115,10 +123,50 @@ public class Meeting
         this.emails = emails;
     }
 
+    public static boolean isAValidMeeting(Context context,Meeting currentMeeting)
+    {
+        // Derniers tests pour s'assurer que tout a été rempli et que les valeurs soient correctes
+
+        if (currentMeeting.getName().isEmpty()){
+            Toast.makeText(context, "Veuillez entrer un nom de réunion", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (currentMeeting.getEmails().isEmpty()){
+            Toast.makeText(context,"Veuillez au moins entrer un participant",Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if((currentMeeting.getDay() == 0) || (currentMeeting.getMonth() == 0) || (currentMeeting.getYear() == 0) || (currentMeeting.getStartHour() == 0) || (currentMeeting.getEndHour() == 0)) {
+            Toast.makeText(context, "Veuillez renseigner la date, l'heure de début et de fin", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (currentMeeting.getStartHour() > currentMeeting.getEndHour() || (currentMeeting.getStartHour() == currentMeeting.getEndHour() && currentMeeting.getStartMinutes() > currentMeeting.getEndMinutes())) {
+            Toast.makeText(context, "L'heure de début doit précéder l'heure de fin", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (currentMeeting.getYear() <= today.YEAR)
+            if (currentMeeting.getMonth() <= today.MONTH)
+                if (currentMeeting.getDay() < today.DAY_OF_MONTH){
+                    Toast.makeText(context, "Veuillez saisir une date correcte", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+        // Ajout de la réunion à la liste, si elle remplit les conditions
+        if (mMeetingService.canBeOrganized(currentMeeting)) {
+            mMeetingService.addMeeting(currentMeeting);
+            Toast.makeText(context, "Réunion enregistrée", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        else {
+            Toast.makeText(context, "La réunion entre en conflit avec une précédente", Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Meeting meeting = (Meeting) o;
         return day == meeting.day &&
                 month == meeting.month &&
