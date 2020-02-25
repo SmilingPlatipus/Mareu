@@ -109,7 +109,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
 
                         // Gestion des événements sur la croix de chaque bouton créé
 
-                        setCustomButtonListener(textView,emailButton);
+                        setCustomButtonListener(emailButton);
                     }
                     else{
                         if (emails.contains(textView.getText().toString()))
@@ -127,7 +127,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
         });
     }
 
-    private void setCustomButtonListener(final TextView textView, final Button emailButton) {
+    private void setCustomButtonListener(final Button emailButton) {
         emailButton.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
@@ -137,7 +137,7 @@ public class DetailMeetingActivity extends AppCompatActivity implements AdapterV
                 if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if(motionEvent.getRawX() >= (emailButton.getRight() - emailButton.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Toast.makeText(getApplicationContext(),emailButton.getText()+" supprimé de la réunion",Toast.LENGTH_LONG).show();
-                        emails.remove(textView.getText().toString());
+                        emails.remove(emailButton.getText().toString());
                         emailList.removeView(emailButton);
                         return true;
                     }
